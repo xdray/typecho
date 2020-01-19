@@ -69,6 +69,7 @@ class HyperDown
         array('sh', 130),
         array('mh', 140),
         array('dhr', 150),
+        array('webgl', 160),
         array('default', 9999)
     );
 
@@ -1119,6 +1120,14 @@ class HyperDown
         return true;
     }
 
+    private function parseBlockWebgl($block, $key, $line) {
+        if (preg_match("/\[webgl.*]/i", $line)) {
+            $this->startBlock("webgl", $key)->endBlock();
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param $block
      * @param $key
@@ -1641,6 +1650,28 @@ class HyperDown
         }
 
         return implode("\n", $this->markLines($lines, $start));
+    }
+
+    /**
+     * parseWebgl
+     *
+     * @param array $lines
+     * @param $type
+     * @param $start
+     */
+    private function parseWebgl(array $lines, $type, $start) {
+        $html = '';
+        foreach ($lines as &$line) {
+            $line = preg_replace("/[\[\]]*/", '', $line);
+            $args = preg_split("/[ ]/", $line);
+
+            if (count($args) >= 3) {
+                $html .= '<div id="__webgl_' . $args[1] .'">';
+                $html .= '<script>UnityLoader.instantiate("__webgl_' . $args[1] . '", "' . $args[2] . '");</script></div>';
+            }
+        }
+
+        return $html;
     }
 
     /**

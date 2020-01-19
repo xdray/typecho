@@ -320,4 +320,14 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);
     }
+
+    protected function shouldIgnoreWebGL()
+    {
+        return true;
+    }
+
+    protected function shouldRenderWebGL()
+    {
+        return false;
+    }
 }
