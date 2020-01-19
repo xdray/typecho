@@ -15,6 +15,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  */
 class Widget_Abstract_Contents extends Widget_Abstract
 {
+    protected $hasWebGL;
     /**
      * 将tags取出
      *
@@ -711,6 +712,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $value['isMarkdown'] = (0 === strpos($value['text'], '<!--markdown-->'));
             if ($value['isMarkdown']) {
                 $value['text'] = substr($value['text'], 15);
+
+                if ($this->shouldRenderWebGL() && stripos($value['text'], '[webgl') != false) {
+                    $this->hasWebGL = true;
+                }
+
+                if ($this->shouldIgnoreWebGL()) {
+                    $value['text'] = preg_replace('/\[webgl.*]/i', '', $value['text']);
+                }
             }
         }
 
@@ -1006,6 +1015,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
 
         return $html;
+    }
+
+    protected function shouldIgnoreWebGL() {
+        return !$this->is("single");
+    }
+
+    protected function shouldRenderWebGL() {
+        return $this->is("single");
     }
 }
 

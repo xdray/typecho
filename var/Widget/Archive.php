@@ -1846,6 +1846,10 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
+        if ($this->hasWebGL === true) {
+            $header .= '<script src="' . Typecho_Common::url("var/loader/UnityLoader.js", $this->siteUrl) . '"></script>';
+        }
+
         /** 输出header */
         echo $header;
 
